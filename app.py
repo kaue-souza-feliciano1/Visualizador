@@ -30,10 +30,10 @@ def formulario():
 def salvar():
     nome = request.form["nome"]
     senha = request.form["senha"]
-    ip = request.remote_addr
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     # Hash da senha antes de armazenar
     senha_hash = generate_password_hash(senha)
-
+    print(f"IP do cliente: {ip}")
     conn = sqlite3.connect("dados.db")
     cursor = conn.cursor()
 
@@ -49,4 +49,4 @@ def salvar():
 
 if __name__ == "__main__":
     criar_banco()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
